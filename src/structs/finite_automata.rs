@@ -3,6 +3,8 @@ use std::{
     fmt::Display,
 };
 
+use rayon::prelude::*;
+
 /// HashSet does not impl Hash, therefore HashSet<HashSet<String>> is illegal
 /// use HashSet<BTreeSet> instead!
 type State = BTreeSet<String>;
@@ -26,7 +28,7 @@ impl FiniteAutomata {
     ) -> Self {
         // states: all distinct states that appear in transitions
         let states = transitions
-            .iter()
+            .par_iter()
             .flat_map(|(from, _, to)| {
                 vec![
                     BTreeSet::from_iter(vec![(*from).into()]),
@@ -36,7 +38,7 @@ impl FiniteAutomata {
             .collect();
         // transitions: (&str, char, &str) -> (BTreeSet<String>, char, BTreeSet<String>)
         let transitions = transitions
-            .into_iter()
+            .into_par_iter()
             .map(|(from, symbol, to)| {
                 (
                     BTreeSet::from_iter(vec![from.into()]),
@@ -47,7 +49,7 @@ impl FiniteAutomata {
             .collect();
         // final_states: HashSet<&str> -> HashSet<BTreeSet<String>>
         let final_states = final_states
-            .iter()
+            .par_iter()
             .map(|&s| BTreeSet::from_iter(vec![s.into()]))
             .collect();
         // start_state: &str -> BTreeSet<String>
@@ -102,7 +104,7 @@ impl FiniteAutomata {
         // if state and original final state have intersection
         // then it becomes new final state
         for s in &states {
-            if self.final_states.iter().any(|f| f.is_subset(s)) {
+            if self.final_states.par_iter().any(|f| f.is_subset(s)) {
                 final_states.insert(s.clone());
             }
         }
@@ -143,7 +145,7 @@ impl FiniteAutomata {
     /// find all characters that moves the given state to another valid state
     fn next_alphabets(&self, state: &State) -> HashSet<char> {
         self.transitions
-            .iter()
+            .par_iter()
             .filter_map(|(from, symbol, _)| {
                 if from.is_subset(state) {
                     Some(*symbol)
