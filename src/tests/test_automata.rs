@@ -24,22 +24,49 @@ mod test_automata {
     //     println!("{}", dfa);
     // }
 
+    // #[test]
+    // fn subset_construction_2() {
+    //     let transitions = HashSet::from_iter(vec![
+    //         ("X", 'a', "X"),
+    //         ("X", 'b', "X"),
+    //         ("X", 'a', "Y"),
+    //         ("X", 'a', "Z"),
+    //         ("Y", 'b', "Y"),
+    //         ("Z", 'c', "Z"),
+    //     ]);
+    //     let final_states = HashSet::from_iter(vec!["Y", "Z"]);
+    //     let nfa = FiniteAutomata::new(transitions, final_states, "X");
+    //     assert_eq!(nfa.is_deterministic(), false);
+    //
+    //
+    //     println!("--- TEST 2 ---");
+    //     println!("{}", nfa);
+    //     let dfa = nfa.subset_construction();
+    //     println!("{}", dfa);
+    // }
+
     #[test]
-    fn subset_construction_2() {
+    fn subset_construction_3() {
         let transitions = HashSet::from_iter(vec![
-            ("X", 'a', "X"),
-            ("X", 'b', "X"),
-            ("X", 'a', "Y"),
-            ("X", 'a', "Z"),
-            ("Y", 'b', "Y"),
-            ("Z", 'c', "Z"),
+            ("q0", 'a', "q1"),
+            ("q1", EPSILON, "q2"),
+            ("q2", EPSILON, "q3"),
+            ("q2", EPSILON, "q9"),
+            ("q3", EPSILON, "q4"),
+            ("q3", EPSILON, "q6"),
+            ("q4", 'b', "q5"),
+            ("q6", 'c', "q7"),
+            ("q5", EPSILON, "q8"),
+            ("q7", EPSILON, "q8"),
+            ("q8", EPSILON, "q9"),
+            ("q8", EPSILON, "q3"),
         ]);
-        let final_states = HashSet::from_iter(vec!["Y", "Z"]);
-        let nfa = FiniteAutomata::new(transitions, final_states, "X");
+        let final_states = HashSet::from_iter(vec!["q9"]);
+        let nfa = FiniteAutomata::new(transitions, final_states, "q0");
         assert_eq!(nfa.is_deterministic(), false);
 
 
-        println!("--- TEST 2 ---");
+        println!("--- TEST 3 ---");
         println!("{}", nfa);
         let dfa = nfa.subset_construction();
         println!("{}", dfa);

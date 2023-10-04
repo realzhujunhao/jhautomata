@@ -117,14 +117,21 @@ impl FiniteAutomata {
     /// return all states that are reachable from epsilon transition + original states
     fn epsilon_closure(&self, from: &State) -> State {
         let mut result = from.clone();
-        let epsilon_move = self.reachable_states(&from, EPSILON);
-        result.extend(epsilon_move);
+        let mut epsilon_move = from.clone();
+        loop {
+            epsilon_move = self.reachable_states(&epsilon_move, EPSILON);
+            epsilon_move.retain(|x| !from.contains(x));
+            if epsilon_move.is_empty() {
+                break;
+            }
+            result.extend(epsilon_move.clone());
+        }
         result
     }
 
     /// find all states that are reachable from the given state by consuming the given symbol
     fn reachable_states(&self, from: &State, symbol: char) -> State {
-        let mut reachable = BTreeSet::new();
+        let mut reachable = State::new();
         for (a, b, c) in &self.transitions {
             if a.is_subset(from) && symbol == *b {
                 reachable.extend(c.clone());
