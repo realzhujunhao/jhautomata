@@ -121,8 +121,9 @@ impl FiniteAutomata {
         let mut result = from.clone();
         let mut epsilon_move = from.clone();
         loop {
+            let prev = epsilon_move.clone();
             epsilon_move = self.reachable_states(&epsilon_move, EPSILON);
-            epsilon_move.retain(|x| !from.contains(x));
+            epsilon_move.retain(|x| !prev.contains(x));
             if epsilon_move.is_empty() {
                 break;
             }
