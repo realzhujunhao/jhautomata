@@ -1,74 +1,40 @@
 #[cfg(test)]
 mod test_automata {
-    use std::collections::HashSet;
+    use petgraph::visit::IntoEdges;
 
-    use crate::structs::finite_automata::{FiniteAutomata, EPSILON};
-
-    // #[test]
-    // fn subset_construction_1() {
-    //     let transitions = HashSet::from_iter(vec![
-    //         ("s0", EPSILON, "s1"),
-    //         ("s1", 'a', "s1"),
-    //         ("s1", 'a', "s2"),
-    //         ("s1", 'b', "s1"),
-    //         ("s2", 'b', "s3"),
-    //         ("s3", 'b', "s4"),
-    //     ]);
-    //     let final_states = HashSet::from_iter(vec!["s4"]);
-    //     let nfa = FiniteAutomata::new(transitions, final_states, "s0");
-    //     assert_eq!(nfa.is_deterministic(), false);
-    //
-    //     println!("--- TEST 1 ---");
-    //     println!("{}", nfa);
-    //     let dfa = nfa.subset_construction();
-    //     println!("{}", dfa);
-    // }
-
-    // #[test]
-    // fn subset_construction_2() {
-    //     let transitions = HashSet::from_iter(vec![
-    //         ("X", 'a', "X"),
-    //         ("X", 'b', "X"),
-    //         ("X", 'a', "Y"),
-    //         ("X", 'a', "Z"),
-    //         ("Y", 'b', "Y"),
-    //         ("Z", 'c', "Z"),
-    //     ]);
-    //     let final_states = HashSet::from_iter(vec!["Y", "Z"]);
-    //     let nfa = FiniteAutomata::new(transitions, final_states, "X");
-    //     assert_eq!(nfa.is_deterministic(), false);
-    //
-    //
-    //     println!("--- TEST 2 ---");
-    //     println!("{}", nfa);
-    //     let dfa = nfa.subset_construction();
-    //     println!("{}", dfa);
-    // }
+    use crate::{set, structs::finite_automata::*};
+    use std::collections::BTreeSet;
 
     #[test]
-    fn subset_construction_3() {
-        let transitions = HashSet::from_iter(vec![
-            ("q0", 'a', "q1"),
-            ("q1", EPSILON, "q2"),
-            ("q2", EPSILON, "q3"),
-            ("q2", EPSILON, "q9"),
-            ("q3", EPSILON, "q4"),
-            ("q3", EPSILON, "q6"),
-            ("q4", 'b', "q5"),
-            ("q6", 'c', "q7"),
-            ("q5", EPSILON, "q8"),
-            ("q7", EPSILON, "q8"),
-            ("q8", EPSILON, "q9"),
-            ("q8", EPSILON, "q3"),
-        ]);
-        let final_states = HashSet::from_iter(vec!["q9"]);
-        let nfa = FiniteAutomata::new(transitions, final_states, "q0");
-        assert_eq!(nfa.is_deterministic(), false);
+    fn check1() {
+        let edges = vec![
+            ("s0", ' ', "s1"),
+            ("s1", 'a', "s1"),
+            ("s1", 'a', "s2"),
+            ("s1", 'b', "s1"),
+            ("s2", 'b', "s3"),
+            ("s3", 'b', "s4"),
+        ];
 
+        let nfa = FiniteAutomata::from_slice(&edges, "s0", &vec!["s4"]);
+        nfa.export("nfa1");
+        let dfa = nfa.to_dfa();
+        dfa.export("dfa1");
+    }
 
-        println!("--- TEST 3 ---");
-        println!("{}", nfa);
-        let dfa = nfa.subset_construction();
-        println!("{}", dfa);
+    #[test]
+    fn check2() {
+        let edges = vec![
+            ("q0", 'a', "q1"), ("q1", ' ', "q2"),
+            ("q2", ' ', "q3"), ("q2", ' ', "q9"),
+            ("q3", ' ', "q4"), ("q3", ' ', "q6"),
+            ("q4", 'b', "q5"), ("q6", 'c', "q7"),
+            ("q5", ' ', "q8"), ("q7", ' ', "q8"),
+            ("q8", ' ', "q3"), ("q8", ' ', "q9")
+        ];
+        let nfa = FiniteAutomata::from_slice(&edges, "q0", &vec!["q9"]);
+        nfa.export("nfa2");
+        let dfa = nfa.to_dfa();
+        dfa.export("dfa2");
     }
 }

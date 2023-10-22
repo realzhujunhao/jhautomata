@@ -1,4 +1,4 @@
 #![allow(unused)]
-mod structs;
-mod tests;
-
+pub mod macros;
+pub mod structs;
+pub mod tests;
