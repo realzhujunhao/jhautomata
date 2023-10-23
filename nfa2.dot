@@ -1,9 +1,9 @@
 digraph {
-    0 [ label = "q0" ]
+    0 [ label = "q0" shape = triangle]
     1 [ label = "q1" ]
     2 [ label = "q2" ]
     3 [ label = "q3" ]
-    4 [ label = "q9" ]
+    4 [ label = "q9" shape = doublecircle]
     5 [ label = "q4" ]
     6 [ label = "q6" ]
     7 [ label = "q5" ]

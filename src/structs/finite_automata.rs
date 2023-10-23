@@ -12,7 +12,7 @@ use petgraph::{
     dot::{Config, Dot},
     graph::NodeIndex,
     matrix_graph::node_index,
-    visit::{IntoEdgeReferences, IntoEdgesDirected},
+    visit::{IntoEdgeReferences, IntoEdgesDirected, NodeRef},
     Direction::{Incoming, Outgoing},
     Graph,
 };
@@ -166,10 +166,18 @@ impl FiniteAutomata {
     }
 
     pub fn export(&self, name: &str) -> io::Result<()> {
-        let dot = format!("{:?}", Dot::new(&self.graph));
-
-        println!("start states: {:?}", self.parse_states(&set![self.start]));
-        println!("final states: {:?}", self.parse_states(&self.fin));
+        // let dot = format!("{:?}", Dot::new(&self.graph));
+        let dot = format!("{:?}", 
+            Dot::with_attr_getters(&self.graph, &[], &|g, e| String::new(), &|g, n| {
+                if n.1.0 == g[self.start].0 {
+                    return String::from("shape = triangle");
+                }
+                if self.fin.contains(&n.0) {
+                    return String::from("shape = doublecircle");
+                }
+                String::new()
+            })
+        );
         let caller_path = std::env::current_dir()?;
         let dot_path = caller_path.join(format!("{}.dot", name));
         let svg_path = caller_path.join(format!("{}.svg", name));
@@ -189,6 +197,7 @@ impl FiniteAutomata {
             .output()?;
         Ok(())
     }
+
 
     /// given set of node indices, extract the states then merge as one state
     fn parse_states(&self, idx: &NodeGroup) -> State {

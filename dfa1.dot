@@ -1,9 +1,9 @@
 digraph {
-    0 [ label = "s0, s1" ]
+    0 [ label = "s0, s1" shape = triangle]
     1 [ label = "s1" ]
     2 [ label = "s1, s2" ]
     3 [ label = "s1, s3" ]
-    4 [ label = "s1, s4" ]
+    4 [ label = "s1, s4" shape = doublecircle]
     0 -> 1 [ label = "b" ]
     0 -> 2 [ label = "a" ]
     1 -> 1 [ label = "b" ]

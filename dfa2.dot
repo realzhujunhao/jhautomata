@@ -1,16 +1,13 @@
 digraph {
-    0 [ label = "q0" ]
-    1 [ label = "q1, q2, q3, q4, q6, q9" ]
-    2 [ label = "q3, q4, q5, q6, q8, q9" ]
-    3 [ label = "q3, q4, q6, q7, q8, q9" ]
+    0 [ label = "q0" shape = triangle]
+    1 [ label = "q1, q2, q3, q4, q6, q9" shape = doublecircle]
+    2 [ label = "q3, q4, q5, q6, q8, q9" shape = doublecircle]
+    3 [ label = "q3, q4, q6, q7, q8, q9" shape = doublecircle]
     0 -> 1 [ label = "a" ]
     1 -> 2 [ label = "b" ]
     1 -> 3 [ label = "c" ]
-    2 -> 2 [ label = "b" ]
-    2 -> 3 [ label = "c" ]
     3 -> 2 [ label = "b" ]
     3 -> 3 [ label = "c" ]
-}
- [ label = "b" ]
-    4 -> 3 [ label = "c" ]
+    2 -> 2 [ label = "b" ]
+    2 -> 3 [ label = "c" ]
 }
